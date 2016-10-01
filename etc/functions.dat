@@ -1,0 +1,17 @@
+1	count	string|int|double
+2	max	int|double
+3	min	int|double
+4	sum	int|double
+5	avg	double
+6	num	string|int|double
+7	number	string|int|double
+8	highest	int|double
+9	largest	int|double
+8	lowest	int|double
+9	smallest	int|double
+10	maximum	int|double
+11	maximal	int|double
+12	minimum	int|double
+13	minimal	int|double
+14	average	double
+15	summation	int|double

@@ -1,0 +1,5 @@
+R:paper(id int key, title string, booktitle string, year int)	0
+R:author(id int key, name string)	0
+R:pa(id int key, pid int key,aid int key)	2
+J:pa	paper	pid	id	n1
+J:pa	author	aid	id	n1
