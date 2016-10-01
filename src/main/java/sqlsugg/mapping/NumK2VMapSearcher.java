@@ -120,7 +120,7 @@ public class NumK2VMapSearcher extends MapSearcher {
 			sg.buildFromFile("data/dblp/schema.dat");
 			String dbname = "sqlsugg_dblp";
 			SQLBackend sql = new SQLBackend ();
-			sql.connectMySQL(Config.dbUser, Config.dbPass, dbname);
+			sql.connectMySQL(Config.dbHost, Config.dbUser, Config.dbPass, dbname);
 			NumK2VMapSearcher nsearcher = new NumK2VMapSearcher (sg, sql);
 			nsearcher.constructHistograms(10);
 			List<KeywordMap> keywordMaps = nsearcher.searchMaps("2000", MapType.K2V);

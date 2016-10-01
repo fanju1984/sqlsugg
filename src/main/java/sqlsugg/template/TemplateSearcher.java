@@ -75,7 +75,7 @@ public class TemplateSearcher {
 			sg.buildFromFile("data/dblp/schema.dat");
 			String dbname = "sqlsugg_dblp";
 			SQLBackend sql = new SQLBackend ();
-			sql.connectMySQL(Config.dbUser, Config.dbPass, dbname);
+			sql.connectMySQL(Config.dbHost, Config.dbUser, Config.dbPass, dbname);
 			Scorer scorer = new Scorer (sg, sql, dbname);
 			
 			TemplateIndex tptIndex = tptGen.generate(sg, scorer, 5);

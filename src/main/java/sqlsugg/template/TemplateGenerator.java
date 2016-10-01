@@ -121,7 +121,7 @@ public class TemplateGenerator {
 			sg.buildFromFile("data/dblp/schema.dat");
 			
 			SQLBackend sql = new SQLBackend ();
-			sql.connectMySQL(Config.dbUser, Config.dbPass, dbname);
+			sql.connectMySQL(Config.dbHost, Config.dbUser, Config.dbPass, dbname);
 			
 			Scorer scorer = new Scorer (sg, sql, dbname);
 			TemplateGenerator tptGen = new TemplateGenerator();

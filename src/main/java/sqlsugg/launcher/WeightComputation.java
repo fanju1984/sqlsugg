@@ -17,7 +17,8 @@ public class WeightComputation {
 			String schemaFile = config.domain.schemaFile;
 			String dbName = config.domain.dbName;
 			SQLBackend sql = new SQLBackend();
-			sql.connectMySQL(Config.dbUser, Config.dbPass, dbName);
+			sql.connectMySQL(Config.dbHost, Config.dbUser, 
+					Config.dbPass, dbName);
 			SchemaGraph sg = new SchemaGraph();
 			sg.buildFromFile(schemaFile);
 			System.out.println("Calculate the prior weights of tables");

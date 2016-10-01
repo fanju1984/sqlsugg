@@ -143,7 +143,7 @@ public class K2VMapInv {
 		SchemaGraph sg = new SchemaGraph();
 		sg.buildFromFile(schemaFile);
 		SQLBackend sql = new SQLBackend ();
-		sql.connectMySQL("sqlsugg", "sqlsugg", dbName);
+		sql.connectMySQL(Config.dbHost, "sqlsugg", "sqlsugg", dbName);
 		K2VMapInv inv = new K2VMapInv (sg, sql);
 		inv.index();
 		sql.disconnectMySQL();

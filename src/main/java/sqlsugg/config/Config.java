@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class Config {
 	public Domain domain;
-	public static String dbHost = null;
+	public static String dbHost = "localhost";
 	public static String dbUser = null;
 	public static String dbPass = null;
 	public static String stopfile = "etc/stopwords.txt";

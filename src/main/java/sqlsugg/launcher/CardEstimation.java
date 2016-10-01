@@ -38,7 +38,8 @@ public class CardEstimation {
 
 			TemplateGenerator tptGen = new TemplateGenerator();
 			SQLBackend sql = new SQLBackend();
-			sql.connectMySQL(Config.dbUser, Config.dbPass, dbName);
+			sql.connectMySQL(Config.dbHost, Config.dbUser, 
+					Config.dbPass, dbName);
 			SchemaGraph sg = new SchemaGraph();
 			sg.buildFromFile(schemaFile);
 			Scorer scorer = new Scorer(sg, sql, dbName);

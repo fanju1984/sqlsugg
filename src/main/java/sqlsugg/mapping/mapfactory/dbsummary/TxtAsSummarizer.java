@@ -117,7 +117,7 @@ public class TxtAsSummarizer extends MapFactory {
 	int computeTuplePopularity(Relation relation, String primaryValue)
 			throws Exception {
 		SQLBackend lsql = new SQLBackend ();
-		lsql.connectMySQL(Config.dbUser, Config.dbPass, "sqlsugg_dblp");
+		lsql.connectMySQL(Config.dbHost, Config.dbUser, Config.dbPass, "sqlsugg_dblp");
 		int pop = 0;
 		List<Pair<Relation, Attribute>> foreigns = sg.getForeign(relation);
 		for (Pair<Relation, Attribute> foreign : foreigns) {

@@ -21,6 +21,7 @@ public class SQLBackend {
 		mDBName = dbName;
 	}
 	
+	/*
 	public void connectMySQL (String userName, String password, String dbName) 
 		throws InstantiationException, Exception, 
 		ClassNotFoundException, IllegalAccessException{
@@ -28,19 +29,19 @@ public class SQLBackend {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         conn = DriverManager.getConnection(url, userName, password);
         System.out.println("Database connection established");*/
-		Class.forName("com.mysql.jdbc.Driver");
-		conn = DriverManager.getConnection("jdbc:mysql://localhost/sqlsugg_dblp_server?useUnicode=true&characterEncoding=gbk&jdbcCompliantTruncation=false", 
-				userName, password);
-		this.dbName = dbName;
-		this.useDB(dbName);
-	}
+	//	Class.forName("com.mysql.jdbc.Driver");
+	//	conn = DriverManager.getConnection("jdbc:mysql://localhost/" + dbName+ "?useUnicode=true&characterEncoding=gbk&jdbcCompliantTruncation=false", 
+	//			userName, password);
+	//	this.dbName = dbName;
+	//	this.useDB(dbName);
+//	}
 	
 	public void connectMySQL (String server, String userName, String password, String dbName) 
 		throws InstantiationException, Exception, 
 		ClassNotFoundException, IllegalAccessException{
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection("jdbc:mysql://" + server + 
-				"/sqlsugg_dblp_server?useUnicode=true&characterEncoding=gbk&jdbcCompliantTruncation=false", 
+				"/" + dbName + "?useUnicode=true&characterEncoding=gbk&jdbcCompliantTruncation=false", 
 				userName, password);
 		this.dbName = dbName;
 		this.useDB(dbName);

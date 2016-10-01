@@ -6,6 +6,7 @@ import java.util.*;
 
 import sqlsugg.backends.DBDump;
 import sqlsugg.backends.SQLBackend;
+import sqlsugg.config.Config;
 import sqlsugg.parser.xml.XmlParser;
 import sqlsugg.parser.xml.XmlSplitter;
 
@@ -30,7 +31,8 @@ public class Main_Xml2DB {
 		// and create a table
 		//
 		SQLBackend sql = new SQLBackend();
-		sql.connectMySQL("sqlsugg", "sqlsugg", "sqlsugg_dblp_server");
+		sql.connectMySQL(Config.dbHost, "sqlsugg", 
+				"sqlsugg", "sqlsugg_dblp_server");
 
 		sql.execute("DROP TABLE IF EXISTS paper");
 		sql.execute("DROP TABLE IF EXISTS author");

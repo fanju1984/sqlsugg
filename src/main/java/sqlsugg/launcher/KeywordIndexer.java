@@ -44,7 +44,7 @@ public class KeywordIndexer {
 	
 	private static SQLBackend initSQL(String dbName) throws Exception{
 		SQLBackend sql = new SQLBackend ();
-		sql.connectMySQL(Config.dbUser, Config.dbPass, dbName);
+		sql.connectMySQL(Config.dbHost, Config.dbUser, Config.dbPass, dbName);
 		sql.useDB(dbName);
 		return sql;
 	}
@@ -52,7 +52,7 @@ public class KeywordIndexer {
 	public static void indexKeywordMap (MapType mapType, 
 			String dbName, SchemaGraph sg, boolean inc) throws Exception {
 		System.out.println("\n\nNow Indexing the mappings with the type " + 
-				mapType.toString() + " INC(" + inc + ")"+ "\n\n" ) ;
+				mapType.toString() + " INC(" + inc + ")"+ " at DB: " + dbName + "\n\n" ) ;
 		SQLBackend sql1 = initSQL (dbName);
 		SQLBackend sql2 = initSQL (dbName);
 		SQLBackend sql3 = initSQL (dbName);

@@ -59,12 +59,12 @@ public class DBMapIndexer {
 			str += "\"" + parts[0] +  "\",";
 			str += "\"" + tableName + "\",";
 		} else if (parts.length == 2){
-			System.out.println(searchKey + "!!!");
+			//System.out.println(searchKey + "!!!");
 			str += "\"" + parts[0] +  "\",";
 			str += "\"" + tableName + "\",";
 			str += "\"" + parts[1] +  "\",";
 		} else {
-			System.out.println(searchKey + "!!!");
+			//System.out.println(searchKey + "!!!");
 			return null;
 		}
 		str += score;
