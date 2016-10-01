@@ -1,0 +1,10 @@
+[
+	{
+		name:"dblp",
+		dbhost:"localhost",
+		dbuser:"sqlsugg",
+		dbpass:"sqlsugg",
+		dbname:"dblp_sqlsugg",
+		schemafile:"etc/dblp/schema.dat"
+	},
+]
