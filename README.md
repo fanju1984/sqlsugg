@@ -17,7 +17,8 @@ If you want to use the latest code, please clone it from our Github repo using t
 Next, we show how to build _SQLSugg_ from the source code. 
 
 ### Build _SQLSugg_
-First, you can see a configuration file `gradle.build` for gradle build. Using this file, you can configure the dependencies and fat-jars of the backends. If you did not change the code, you can simply use the default `gradle.build` and type the following commands. 
+First, you can see a configuration file `gradle.build` for gradle build. Using this file, you can configure the dependencies and fat-jars of the backends. Please make sure that the version set in the file is compatible with your Gradle version. 
+If you did not change the code, you can simply use the default `gradle.build` and type the following commands. 
 
     $ gradle clean build fatjar
     $ cd build/libs
