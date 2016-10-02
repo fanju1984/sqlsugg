@@ -12,7 +12,7 @@ _SQLSugg_ is developed and tested on Linux-like platforms. Before installing it,
 If you want to use the latest code, please clone it from our Github repo using the following commands. Note that the current repo is private, and so make sure you are one of the collaborators. 
 
     $ git clone https://github.com/fanju1984/sqlsugg
-    $ cd etl
+    $ cd sqlsugg
 
 Next, we show how to build _SQLSugg_ from the source code. 
 
