@@ -1,4 +1,4 @@
-# sqlsugg
+# _SQLSugg_: Interactive SQL Query Suggestion
 
 We will show the steps of building _SQLSugg_ from source in this page
 
