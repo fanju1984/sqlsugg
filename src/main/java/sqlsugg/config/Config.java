@@ -49,8 +49,10 @@ public class Config {
 			dbPass = jds.getString("dbPass");
 			
 			domain = new Domain (dsName, 
-					jds.getString("schemaFile"), 
-					jds.getString("dbName"));
+					"etc/" + jds.getString("schemaFile"), 
+					dbHost, dbUser, dbPass, 
+					jds.getString("dbName")
+					);
 			break;
 		}
 		

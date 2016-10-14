@@ -3,6 +3,7 @@ package sqlsugg.servlet;
 
 import javax.servlet.http.*;
 import javax.servlet.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -16,6 +17,8 @@ import sqlsugg.util.schemaGraph.*;
 import sqlsugg.util.tokenizer.Tokenizer;
 import sqlsugg.backends.*;
 import sqlsugg.config.Config;
+import sqlsugg.config.Domain;
+import sqlsugg.config.DomainPool;
 import sqlsugg.display.Translator;
 import sqlsugg.display.Visualizer;
 import sqlsugg.util.basicstruct.*;
@@ -24,7 +27,7 @@ import sqlsugg.util.basicstruct.*;
 
 
 public class SQLServlet extends HttpServlet{
-	
+	/*
 	SchemaGraph dblpSg;
 	SchemaGraph dblifeSg;
 	
@@ -40,20 +43,69 @@ public class SQLServlet extends HttpServlet{
 	
 	Translator dblpTranslator;
 	Translator dblifeTranslator;
+	*/
 	
-	Tokenizer tokenizer;
 	
-	int k = 3;
 
 	private static final long serialVersionUID = 1L;
-
-	public SQLServlet () {
-		
-	}
+	private static final String configFolder = "sqlsugg/etc/";
+	private static final String domainRegFile = "dataset_config.json";
+	private static final String stopwordsFile = "stopwords.txt";
+	
+	private Map<String, SQLBackend> sqlPool = new HashMap<String, SQLBackend> ();
+	private Map<String, SchemaGraph> sGraphPool = new HashMap<String, SchemaGraph> ();
+	private Map<String, Translator> transPool = new HashMap<String, Translator> ();
+	private Map<String, TemplateSearcher> searcherPool = new HashMap<String, TemplateSearcher>();
+	private Map<String, WSCAlgo> rankAlgoPool = new HashMap<String, WSCAlgo>();
+	Tokenizer tokenizer; 	
+	int k = 3;
+	
+	public SQLServlet () { }
 	
 	public void init(ServletConfig config) throws ServletException {
-		try {
-			System.out.println("init");
+		try {		
+			String rootPath = config.getServletContext().getRealPath("/");
+			System.out.println("[SQLSugg]: Init from root: " + rootPath);
+			String contextPath = rootPath + configFolder;
+			DomainPool domainPool = 
+					new DomainPool (contextPath, domainRegFile);
+			TemplateGenerator tptGen = new TemplateGenerator();
+			for (String domainName : domainPool.getDomains().keySet()) {
+				Domain domain = domainPool.getDomains().get(domainName);
+				// Setup SQL Back-end
+				SQLBackend sql = new SQLBackend();
+				sql.connectMySQL(domain.dbHost, domain.dbUser,
+						domain.dbPass, domain.dbName);
+				sqlPool.put(domainName, sql);
+				// Setup Schema Graph
+				SchemaGraph sGraph = new SchemaGraph();
+				sGraph.buildFromFile(domain.schemaFile);
+				sGraphPool.put(domainName, sGraph);
+				
+				// Setup Scorer
+				Scorer scorer = new Scorer(sGraph, sql, 
+						domain.dbName);
+				sGraph.loadWeights(scorer);
+				
+				// Setup Translator & Index
+				Translator trans = new Translator (sGraph);
+				TemplateIndex tptIndex = tptGen.generate(sGraph, scorer, 5);
+				transPool.put(domainName, trans);
+				
+				// Setup Searchers
+				DBMapSearcher txtSearcher = new DBMapSearcher (sql);
+				NumK2VMapSearcher numSearcher = new NumK2VMapSearcher (sGraph, sql);
+				TemplateSearcher tptSearcher = new TemplateSearcher (
+						txtSearcher, tptIndex, scorer);
+				searcherPool.put(domainName, tptSearcher);
+
+				WSCAlgo rankAlgo = new WSCAlgo(txtSearcher, numSearcher, 
+						scorer, sGraph);
+				rankAlgoPool.put(domainName, rankAlgo);
+			}
+			tokenizer = new Tokenizer(contextPath + stopwordsFile);
+			
+			/*
 			TemplateGenerator tptGen = new TemplateGenerator();
 			String dblpDB = "sqlsugg_dblp_server";
 			String dblifeDB = "dblife_clean";
@@ -105,6 +157,7 @@ public class SQLServlet extends HttpServlet{
 			File swFile = new File ("sqlsugg_config/etc/stopwords.txt"); 
 			tokenizer = new Tokenizer(
 					swFile.getAbsolutePath());
+			*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,7 +167,10 @@ public class SQLServlet extends HttpServlet{
 	public void destroy() {
 		try {
 			System.out.println("destroy");
-			dblpSQL.disconnectMySQL();
+			for (String domainName : sqlPool.keySet()) {
+				sqlPool.get(domainName).disconnectMySQL();
+			}
+			//dblpSQL.disconnectMySQL();
 			//dblifeSQL.disconnectMySQL();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -139,11 +195,14 @@ public class SQLServlet extends HttpServlet{
 		if (keywords != null && keywords.length() > 0 && 
 				domain != null && domain.length() > 0) {
 			System.out.println("SQLSUGG Query: " + domain + "|||" + keywords);
-			TemplateSearcher tptSearcher = null;
-			SQLGenerator ra = null;
-			Translator translator = null;
-			SchemaGraph sg = null;
-			if (domain.equals("dblp")) {
+			try {
+				if (!sqlPool.containsKey(domain)) 
+					throw new Exception ("[SQLSugg]: Cannot find the domain `" + domain + "`");
+				TemplateSearcher tptSearcher = searcherPool.get(domain);
+				SQLGenerator ra = rankAlgoPool.get(domain);
+				Translator translator = transPool.get(domain);
+				SchemaGraph sg = sGraphPool.get(domain);
+/*			if (domain.equals("dblp")) {
 				tptSearcher = dblpTptSearcher;
 				translator = dblpTranslator;
 				ra = raDBLP;
@@ -153,12 +212,10 @@ public class SQLServlet extends HttpServlet{
 //				ra = raDBLife;
 //				translator = dblifeTranslator;
 			}
-			
-			try {
+*/					
 				long start = System.currentTimeMillis();
 				List<String> tokens = tokenizer.tokenize(keywords);
 				SortedList<String, Template> templates = tptSearcher.searchTemplates(tokens, 10);
-				int count = 0;
 				XMLWrapper wrapper = new XMLWrapper();
 				templates.initIterator();
 				while (templates.hasNext()) {
@@ -175,7 +232,6 @@ public class SQLServlet extends HttpServlet{
 					}
 					results.destroyIterator();
 					wrapper.endGroup();
-					count++;
 				}
 				templates.destroyIterator();
 				long end = System.currentTimeMillis();
@@ -186,6 +242,11 @@ public class SQLServlet extends HttpServlet{
 				out.println(wrapper.getXML());
 				out.close();
 			}catch (Exception e) {
+				response.setContentType("text/html");
+				PrintWriter out = new PrintWriter(response.getOutputStream());
+				out.println("<html>");
+				out.println("Server Error: " + e.getLocalizedMessage());
+				out.println("</html>");
 				e.printStackTrace();
 			}
 		} else {

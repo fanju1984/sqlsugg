@@ -1,13 +1,5 @@
 [
 	{
-		name:"dblp",
-		dbHost:"localhost",
-		dbUser:"sqlsugg",
-		dbPass:"sqlsugg",
-		dbName:"dblp_sqlsugg",
-		schemaFile:"dblp/schema.dat"
-	},
-	{
 		name:"sample",
 		dbHost:"localhost",
 		dbUser:"sqlsugg",
