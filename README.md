@@ -65,3 +65,45 @@ Note that `sample` is the name of the dataset and `K2*` is the type of index.
     $ java -classpath bin/sqlsugg-all-0.1.0-alpha.jar sqlsugg.launcher.SingleSugg sample 2 "data"
     
 Note that `sample` is the name of the dataset `2` is the top-k, and `data` is the keyword query.
+
+
+### Deploy _SQLSugg_ as a Web Service
+
+It is also easy to deploy _SQLSugg_ as a web service by following the steps below. However, before the deployment, make sure that all the aforementioned offline process of _SQLSugg_ have been finished, e.g., building index, computing weight, etc. Otherwise, the service cannot be provided. 
+
+First, you need to choose a web-server software. In our deployment, we use _Tomcat_, which can be downloaded from [here] (http://tomcat.apache.org/). Please note that you can use your preferred web-server software.
+
+Second, copy the folder *webapps* to the root path of your tomcat folder ($TOMCAT_ROOT). Note: please be careful not to replace your useful files in the original *webapps* of Tomcat. 
+
+Third, create a folder $TOMCAT_ROOT/webapps/ROOT/WEB-INF/lib, and put your latest *fatJar* in this folder. 
+
+Fourth, setup servlet configurations at file $TOMCAT_ROOT/webapps/ROOT/WEB-INF/web.xml as follows. 
+
+    $ <servlet> 
+    $   <servlet-name>sqlsugg</servlet-name> 
+    $   <servlet-class>sqlsugg.servlet.SQLServlet</servlet-class> 
+    $ </servlet>
+    $
+    $ <servlet-mapping>   
+    $   <servlet-name>sqlsugg</servlet-name>
+    $   <url-pattern>/sqlsugg</url-pattern>  
+    $ </servlet-mapping>
+    $ <servlet> 
+    $   <servlet-name>recordsugg</servlet-name> 
+    $   <servlet-class>sqlsugg.servlet.RecordServlet</servlet-class> 
+    $ </servlet>
+    $
+    $ <servlet-mapping>   
+    $   <servlet-name>recordsugg</servlet-name>
+    $   <url-pattern>/recordsugg</url-pattern>  
+    $ </servlet-mapping>
+
+
+After that, you can start up your web service by typing *$TOMCAT_ROOT/bin/startup.sh*. Then, you can open a browser and input a testing address *http://localhost:8080/sqlsugg?domain=dblp&keywords=data* (Note that the port in your Tomcat may not be 8080). If an XML-like output is shown, then the web service is successfully set up. 
+
+
+### Use a Flash-Powered Interface of _SQLSugg_
+
+_SQLSugg_ also has a fancy interface powered by [Flash] (xxx). You can use that interface by simply typing *http://localhost:8080/sqlsugg/index.html* in your browser if the previous web service is successfully set up. 
+
+We also privide the source code of the interface at *$SQLSUGG_ROOT/client_source*. If you want to re-develop based on this code, please first install ...
